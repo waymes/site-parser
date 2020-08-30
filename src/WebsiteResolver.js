@@ -1,6 +1,6 @@
 const htmlParser = require('node-html-parser');
 const fetch = require('isomorphic-unfetch');
-const utils = require('./utils');
+const logger = require('./logger');
 const config = require('../config.json');
 
 class WebsiteResolver {
@@ -10,7 +10,7 @@ class WebsiteResolver {
 
   resolve(rows) {
     const chunks = this.createChunks(rows);
-    utils.printInfo(`got ${chunks.length} chunks...`)
+    logger.info(`got ${chunks.length} chunks...`)
     return new Promise((resolve, reject) => {
       this.processChunks(chunks)
         .then(resolve)
@@ -38,7 +38,7 @@ class WebsiteResolver {
     const currentChunk = chunks[currentId];
     const hasNextChunk = !!chunks[currentId + 1];
   
-    utils.printInfo(`fetching ${currentId + 1} chunk...`)
+    logger.info(`fetching ${currentId + 1} chunk...`)
     return Promise.all(currentChunk.map(this.fetchProduct)).then((responses) => {
       if (hasNextChunk) {
         return this.processChunks(chunks, currentId + 1, previousResponses.concat(responses));
@@ -63,7 +63,7 @@ class WebsiteResolver {
             .catch(() => resolve([id, link]))
         })
         .catch((error) => {
-          utils.printError('Error loading website');
+          logger.error('Error loading website');
           resolve([id, ''])
         });
     });
