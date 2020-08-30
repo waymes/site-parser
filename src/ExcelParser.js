@@ -4,15 +4,16 @@ const xlsx = require('node-xlsx');
 const utils = require('./utils');
 
 class ExcelParser {
-  constructor(filename) {
-    this.file = path.resolve(__dirname, '../files', filename);
+  constructor(website) {
+    this.website = website;
+    this.file = path.resolve(__dirname, '../files', website.excel);
   }
 
   readFile() {
     return new Promise((resolve, reject) => {
       fs.readFile(this.file, (err, buffer) => {
         if (err) {
-          utils.printError(`Error parsing "${excelFile}", does file exist?`);
+          utils.printError(`Error parsing "${this.website.excel}", does file exist?`);
           reject(err);
         }
         const parsedData = xlsx.parse(buffer);

@@ -2,11 +2,16 @@
 const ExcelParser = require('./ExcelParser');
 const WebsiteResolver = require('./WebsiteResolver');
 const utils = require('./utils');
+const config = require('../config.json');
 
-const excelFile = process.argv[2];
-const website = 'https://masterwatt.ru';
+const websiteIndex = process.argv[2];
+const website = config.websites[websiteIndex];
+if (!website) {
+  utils.printError('please add this website to config')
+  process.exit(1);
+}
 
-const parser = new ExcelParser(excelFile);
+const parser = new ExcelParser(website);
 const resolver = new WebsiteResolver(website);
 
 utils.printInfo('reading file...');
