@@ -76,7 +76,7 @@ class WebsiteResolver {
   getLinkFromElement(element, attr, fullLink) {
     if (!element) return '';
     let link = element.getAttribute(attr);
-    if (link && link.trim().charAt(0)) {
+    if (link && link.trim().charAt(0) === '/') {
       const url = new URL(fullLink);
       link = url.origin + link.trim();
     }
