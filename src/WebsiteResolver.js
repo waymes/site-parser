@@ -10,24 +10,20 @@ class WebsiteResolver {
 
   resolve(rows) {
     const chunks = this.createChunks(rows);
-    logger.info(`got ${chunks.length} chunks...`)
-    return new Promise((resolve, reject) => {
-      this.processChunks(chunks)
-        .then(resolve)
-        .catch(error => reject(error));
-    });
+    logger.info(`got ${chunks.length} chunks.`)
+    return this.processChunks(chunks);
   }
 
   createChunks = (rows) => {
-    const MAX_AMOUNT_IN_CHUNK = config.numberOfRequestsInParallel;
+    const requestsInParallel = config.numberOfRequestsInParallel;
     const chunks = [];
-    let numberOfChunks = rows.length / MAX_AMOUNT_IN_CHUNK;
+    let numberOfChunks = rows.length / requestsInParallel;
     if (numberOfChunks % 1 !== 0) {
       numberOfChunks = Math.floor(numberOfChunks) + 1;
     }
     for (let i = 0; i < numberOfChunks; i++) {
-      const currentId = i * MAX_AMOUNT_IN_CHUNK;
-      chunks[i] = rows.slice(currentId, currentId + MAX_AMOUNT_IN_CHUNK);
+      const currentId = i * requestsInParallel;
+      chunks[i] = rows.slice(currentId, currentId + requestsInParallel);
     }
     return chunks;
   }
@@ -54,6 +50,9 @@ class WebsiteResolver {
         .then(html => {
           const linkElement = htmlParser.parse(html).querySelector(this.website.linkSelector);
           const link = this.getLinkFromElement(linkElement, 'href', this.website.searchUrl);
+          if (!link) {
+            throw new Error();
+          }
           this.fetchHTML(link)
             .then(html => {
               const imageElement = htmlParser.parse(html).querySelector('.swiper-slide a img');
@@ -62,7 +61,7 @@ class WebsiteResolver {
             })
             .catch(() => resolve([id, link]))
         })
-        .catch((error) => {
+        .catch(() => {
           logger.error('Error loading website');
           resolve([id, ''])
         });

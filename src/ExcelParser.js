@@ -24,8 +24,8 @@ class ExcelParser {
   }
 
   writeFile(data) {
-    const buffer = xlsx.build(data);
     logger.info('writing to file...');
+    const buffer = xlsx.build(data);
     return new Promise(resolve => {
       fs.writeFile(this.file, buffer, (err) => {
         if (err) {

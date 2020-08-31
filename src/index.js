@@ -18,7 +18,10 @@ parser.readFile().then((parsedData) => {
   if (!parsedData[0]) return;
   
   const rows = parsedData[0].data.slice(1);
+  const startFetching = Date.now();
   resolver.resolve(rows).then((responses) => {
+    const execMs = Date.now() - startFetching;
+    logger.info(`fetched in: ${Math.floor(execMs / 1000)}s.`);
     const returnData = [
       {
         name: parsedData[0].name,
