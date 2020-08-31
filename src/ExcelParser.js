@@ -6,7 +6,7 @@ const logger = require('./logger');
 class ExcelParser {
   constructor(website) {
     this.website = website;
-    this.file = path.resolve(__dirname, '../files', website.excel);
+    this.file = path.resolve(__dirname, '../files', website.fileName);
   }
 
   readFile() {
@@ -14,7 +14,7 @@ class ExcelParser {
     return new Promise((resolve, reject) => {
       fs.readFile(this.file, (err, buffer) => {
         if (err) {
-          logger.error(`Error parsing "${this.website.excel}", does file exist?`);
+          logger.error(`Error parsing "${this.website.fileName}", does file exist?`);
           reject(err);
         }
         const parsedData = xlsx.parse(buffer);

@@ -15,7 +15,7 @@ class WebsiteResolver {
   }
 
   createChunks = (rows) => {
-    const requestsInParallel = config.numberOfRequestsInParallel;
+    const requestsInParallel = config.requestsInParallel;
     const chunks = [];
     let numberOfChunks = rows.length / requestsInParallel;
     if (numberOfChunks % 1 !== 0) {
@@ -51,7 +51,7 @@ class WebsiteResolver {
           const linkElement = htmlParser.parse(html).querySelector(this.website.linkSelector);
           const link = this.getLinkFromElement(linkElement, 'href', this.website.searchUrl);
           if (!link) {
-            throw new Error();
+            throw id;
           }
           this.fetchHTML(link)
             .then(html => {
@@ -61,8 +61,8 @@ class WebsiteResolver {
             })
             .catch(() => resolve([id, link]))
         })
-        .catch(() => {
-          logger.error('Error loading website');
+        .catch((id) => {
+          logger.error(`Error loading website with articul ${id}`);
           resolve([id, ''])
         });
     });

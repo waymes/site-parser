@@ -1,8 +1,8 @@
 {
-  "numberOfRequestsInParallel": 50,
+  "requestsInParallel": 50,
   "websites": [
     {
-      "excel": "example.xlsx",
+      "fileName": "example.xlsx",
       "searchUrl": "https://masterwatt.ru/search/index.php?q=",
       "linkSelector": ".b-catalog-list__text a",
       "imageSelector": "#main_page_block > div.b-detail > div.container > div.b-detail-top > div.b-detail-top__slider.b-slider > div > div.swiper-wrapper > div > a > img"
